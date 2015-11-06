@@ -46,6 +46,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
     private float mRadius;
     private float mPageRadius;
+    private float mSpacing;
     private final Paint mPaintPageFill = new Paint(ANTI_ALIAS_FLAG);
     private final Paint mPaintStroke = new Paint(ANTI_ALIAS_FLAG);
     private final Paint mPaintFill = new Paint(ANTI_ALIAS_FLAG);
@@ -102,6 +103,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
         mPaintFill.setColor(a.getColor(R.styleable.CirclePageIndicator_fillColor, defaultFillColor));
         mRadius = a.getDimension(R.styleable.CirclePageIndicator_radius, defaultRadius);
         mPageRadius = a.getDimension(R.styleable.CirclePageIndicator_pageRadius, mRadius);
+        mSpacing = a.getDimension(R.styleable.CirclePageIndicator_circleSpacing, mRadius);
         mSnap = a.getBoolean(R.styleable.CirclePageIndicator_snap, defaultSnap);
 
         Drawable background = a.getDrawable(R.styleable.CirclePageIndicator_android_background);
@@ -234,11 +236,11 @@ public class CirclePageIndicator extends View implements PageIndicator {
         }
 
         final float longerRadius = Math.max(mRadius, mPageRadius);
-        final float threeRadius = longerRadius * 3;
+        final float twoRadiusPlusSpacing = longerRadius * 2 + mSpacing;
         final float shortOffset = shortPaddingBefore + longerRadius;
         float longOffset = longPaddingBefore + longerRadius;
         if (mCentered) {
-            longOffset += ((longSize - longPaddingBefore - longPaddingAfter) / 2.0f) - ((count * threeRadius) / 2.0f);
+            longOffset += ((longSize - longPaddingBefore - longPaddingAfter) / 2.0f) - ((count * twoRadiusPlusSpacing) / 2.0f);
         }
 
         float dX;
@@ -251,7 +253,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
         //Draw inactive circles
         for (int iLoop = 0; iLoop < count; iLoop++) {
-            float drawLong = longOffset + (iLoop * threeRadius);
+            float drawLong = longOffset + (iLoop * twoRadiusPlusSpacing);
             if (mOrientation == HORIZONTAL) {
                 dX = drawLong;
                 dY = shortOffset;
@@ -274,9 +276,9 @@ public class CirclePageIndicator extends View implements PageIndicator {
             pageFillRadius -= mPaintStroke.getStrokeWidth() / 2.0f;
         }
         //Draw the active circle according to the current scroll
-        float cx = (mSnap ? mSnapPage : mCurrentPage) * threeRadius;
+        float cx = (mSnap ? mSnapPage : mCurrentPage) * twoRadiusPlusSpacing;
         if (!mSnap) {
-            cx += mPageOffset * threeRadius;
+            cx += mPageOffset * twoRadiusPlusSpacing;
         }
         if (mOrientation == HORIZONTAL) {
             dX = longOffset + cx;

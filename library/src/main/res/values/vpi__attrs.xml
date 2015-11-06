@@ -49,6 +49,8 @@
         <attr name="radius" format="dimension" />
         <!-- Radius of the non-active circles. -->
         <attr name="pageRadius" format="dimension" />
+        <!-- Spacing between the circles. -->
+        <attr name="circleSpacing" format="dimension" />
         <!-- Whether or not the selected indicator snaps to the circles. -->
         <attr name="snap" format="boolean" />
         <!-- Color of the open circles. -->
