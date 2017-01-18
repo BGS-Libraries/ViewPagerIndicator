@@ -1,4 +1,15 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.1.1"
+    }
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.artifactory"
 
 android {
     compileSdkVersion 23
@@ -8,6 +19,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
+        // NOTE: When updating versionName, be sure to update version in publishing group below too
         versionName "2.5.1"
     }
     buildTypes {
@@ -22,4 +34,36 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:support-v4:23.1.0'
+}
+
+artifactory {
+    contextUrl = "http://bamboo.vidmark.local:8081/artifactory"
+    publish {
+        repository {
+            repoKey = "libs-release-local"
+            username = "admin"
+            password = "password"
+        }
+        defaults {
+          publishArtifacts = true
+          publications ('ViewPagerIndicator')
+          publishPom = true
+          publishIvy = false
+        }
+    }
+}
+
+publishing {
+    publications {
+        ViewPagerIndicator(MavenPublication) {
+            groupId 'com.viewpagerindicator'
+            artifactId 'ViewPagerIndicator'
+            version '2.5.1'
+            artifact("$buildDir/outputs/aar/library-release.aar")
+        }
+    }
+}
+
+artifactoryPublish { 
+    dependsOn assemble
 }
