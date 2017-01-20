@@ -11,6 +11,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 apply plugin: "com.jfrog.artifactory"
 
+// This is the version used as the 'versionName' for the aar library, and also used when deploying to Artifactory
+def versionLabel = "2.5.1"
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -19,8 +22,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        // NOTE: When updating versionName, be sure to update version in publishing group below too
-        versionName "2.5.1"
+        versionName versionLabel
     }
     buildTypes {
         release {
@@ -58,7 +60,7 @@ publishing {
         ViewPagerIndicator(MavenPublication) {
             groupId 'com.viewpagerindicator'
             artifactId 'ViewPagerIndicator'
-            version '2.5.1'
+            version versionLabel
             artifact("$buildDir/outputs/aar/library-release.aar")
         }
     }
